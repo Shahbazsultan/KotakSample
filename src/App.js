@@ -29,6 +29,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './Login';
 import Home from './Home';
+import Details from './Details';
+import Cart from './Cart';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,7 +43,8 @@ const App: () => Node = () => {
       })} initialRouteName="Login">
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Home" component={Home} />
-        {/* <Stack.Screen name="Details" component={DetailsScreen} /> */}
+        <Stack.Screen name="Details" component={Details} />
+        <Stack.Screen name="Cart" component={Cart} />
       </Stack.Navigator>
     </NavigationContainer>
   );

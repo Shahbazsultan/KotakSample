@@ -15,6 +15,7 @@ class Home extends Component {
       }
 
     componentDidMount() {
+        this.displayData();
         this.fetchData()
     }
 
@@ -45,6 +46,39 @@ class Home extends Component {
         }
       }
 
+      addToCart = async (product)=>{ 
+        try {
+          const cart = [];
+          
+          cartItems = await AsyncStorage.getItem('cart')
+          console.log("cart Items", cartItems);
+          if(cartItems !== null) {
+            const cartVal = JSON.parse(cartItems);
+            console.log("cart cartVal Before>>", cartVal);
+
+            const productExist = cartVal ? cartVal.find(prod => prod.id === product.id) : null;
+
+            if(productExist && productExist.id){
+              alert("Item already in Cart");
+              return;
+            }
+            else{
+              cartVal.push(product);
+            }
+            console.log("cart cartVal After>>", cartVal);
+            cart.push(...cartVal);
+            // value previously stored  
+          }
+          else{
+            cart.push(product);
+          }
+          AsyncStorage.setItem('cart',JSON.stringify(cart));
+          alert(`${product.productName} added to Cart`)
+        } catch(e) {
+          // error reading value
+        }
+      }
+
       renderProdList = (product) =>{
 
         return(
@@ -70,10 +104,16 @@ class Home extends Component {
               </View>
               <View style={{justifyContent:'flex-end' ,flexDirection:'row'}}>
                   <View style={{padding:5}}>
-                  <Button title='Details'></Button>
+                  <Button title='Details'
+                  onPress={() => this.props.navigation.navigate('Details', {
+                    product: product
+                  })}
+                  ></Button>
                   </View>
                   <View style={{padding:5}}>
-                  <Button title='Add to Cart'></Button>
+                  <Button title='Add to Cart'
+                  onPress={()=>this.addToCart(product)}
+                  ></Button>
                   </View>
               </View>
               <View style={{}}></View>
@@ -91,10 +131,15 @@ class Home extends Component {
       }} /> */
 
     render() {
-        this.displayData();
+        
         return(
             <View style={{flex:1 , padding:10}}>
-                <Text style={{fontSize:20, fontWeight:'bold'}}>{`Welcome ${this.state.username}`}</Text>
+              <View style={{flexDirection:'row'}}>
+                <Text style={{flex: 6 ,fontSize:20, fontWeight:'bold'}}>{`Welcome ${this.state.username}`}</Text>
+                <TouchableOpacity style={{flex:1}} onPress={() => this.props.navigation.navigate('Cart')}>
+                <Text style={{fontSize:20, fontWeight:'bold'}}>{`Cart`}</Text>
+                </TouchableOpacity>
+                </View>
                 <FlatList
                 style={{flex:1}}
                 // ItemSeparatorComponent={this.ItemSeperator}
